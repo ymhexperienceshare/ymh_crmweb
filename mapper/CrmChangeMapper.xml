@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guigu.crm.mapper.CrmChangeMapper" >
+  <resultMap id="BaseResultMap" type="com.guigu.crm.model.CrmChange" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="rate" property="rate" jdbcType="INTEGER" />
+    <result column="linkman" property="linkman" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="dese" property="dese" jdbcType="VARCHAR" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+    <result column="due_id" property="dueId" jdbcType="INTEGER" />
+    <result column="due_to" property="dueTo" jdbcType="VARCHAR" />
+    <result column="due_date" property="dueDate" jdbcType="DATE" />
+    <result column="status" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, source, cust_name, title, rate, linkman, tel, dese, create_id, create_by, create_date, 
+    due_id, due_to, due_date, status
+  </sql>
+ 
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.guigu.crm.model.CrmChangeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crm_change
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from crm_change
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from crm_change
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.guigu.crm.model.CrmChangeExample" >
+    delete from crm_change
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.guigu.crm.model.CrmChange" >
+    insert into crm_change (id, source, cust_name, 
+      title, rate, linkman, 
+      tel, dese, create_id, 
+      create_by, create_date, due_id, 
+      due_to, due_date, status)
+    values (#{id,jdbcType=INTEGER}, #{source,jdbcType=VARCHAR}, #{custName,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{rate,jdbcType=INTEGER}, #{linkman,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{dese,jdbcType=VARCHAR}, #{createId,jdbcType=INTEGER}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=DATE}, #{dueId,jdbcType=INTEGER}, 
+      #{dueTo,jdbcType=VARCHAR}, #{dueDate,jdbcType=DATE}, #{status,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.guigu.crm.model.CrmChange" >
+    insert into crm_change
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="custName != null" >
+        cust_name,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+      <if test="linkman != null" >
+        linkman,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="dese != null" >
+        dese,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="dueId != null" >
+        due_id,
+      </if>
+      <if test="dueTo != null" >
+        due_to,
+      </if>
+      <if test="dueDate != null" >
+        due_date,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=INTEGER},
+      </if>
+      <if test="linkman != null" >
+        #{linkman,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="dese != null" >
+        #{dese,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="dueId != null" >
+        #{dueId,jdbcType=INTEGER},
+      </if>
+      <if test="dueTo != null" >
+        #{dueTo,jdbcType=VARCHAR},
+      </if>
+      <if test="dueDate != null" >
+        #{dueDate,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.guigu.crm.model.CrmChangeExample" resultType="java.lang.Integer" >
+    select count(*) from crm_change
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update crm_change
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.source != null" >
+        source = #{record.source,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custName != null" >
+        cust_name = #{record.custName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rate != null" >
+        rate = #{record.rate,jdbcType=INTEGER},
+      </if>
+      <if test="record.linkman != null" >
+        linkman = #{record.linkman,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tel != null" >
+        tel = #{record.tel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dese != null" >
+        dese = #{record.dese,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createId != null" >
+        create_id = #{record.createId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createBy != null" >
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=DATE},
+      </if>
+      <if test="record.dueId != null" >
+        due_id = #{record.dueId,jdbcType=INTEGER},
+      </if>
+      <if test="record.dueTo != null" >
+        due_to = #{record.dueTo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dueDate != null" >
+        due_date = #{record.dueDate,jdbcType=DATE},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update crm_change
+    set id = #{record.id,jdbcType=INTEGER},
+      source = #{record.source,jdbcType=VARCHAR},
+      cust_name = #{record.custName,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      rate = #{record.rate,jdbcType=INTEGER},
+      linkman = #{record.linkman,jdbcType=VARCHAR},
+      tel = #{record.tel,jdbcType=VARCHAR},
+      dese = #{record.dese,jdbcType=VARCHAR},
+      create_id = #{record.createId,jdbcType=INTEGER},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      create_date = #{record.createDate,jdbcType=DATE},
+      due_id = #{record.dueId,jdbcType=INTEGER},
+      due_to = #{record.dueTo,jdbcType=VARCHAR},
+      due_date = #{record.dueDate,jdbcType=DATE},
+      status = #{record.status,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.guigu.crm.model.CrmChange" >
+    update crm_change
+    <set >
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        cust_name = #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=INTEGER},
+      </if>
+      <if test="linkman != null" >
+        linkman = #{linkman,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="dese != null" >
+        dese = #{dese,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="dueId != null" >
+        due_id = #{dueId,jdbcType=INTEGER},
+      </if>
+      <if test="dueTo != null" >
+        due_to = #{dueTo,jdbcType=VARCHAR},
+      </if>
+      <if test="dueDate != null" >
+        due_date = #{dueDate,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.guigu.crm.model.CrmChange" >
+    update crm_change
+    set source = #{source,jdbcType=VARCHAR},
+      cust_name = #{custName,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=INTEGER},
+      linkman = #{linkman,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      dese = #{dese,jdbcType=VARCHAR},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=DATE},
+      due_id = #{dueId,jdbcType=INTEGER},
+      due_to = #{dueTo,jdbcType=VARCHAR},
+      due_date = #{dueDate,jdbcType=DATE},
+      status = #{status,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!--机会查询  -->
+  
+  
+   
+  <!-- 定义查询的sql片段  就是商品的查询条件 -->
+	<sql id="query_change_where">
+		   <if test="change!=null">
+		   		 <if test="change.custName!=null and change.custName!=''">
+		   		 	crm_change.cust_name like '%${change.custName}%'
+		   	  	 
+		   		 </if>
+		   		 
+		   		 <if test="change.title!=null and change.title!='' ">
+		   		 	AND crm_change.title like '%${change.title}%'
+		   		 </if>
+		   		 
+		   		  <if test="change.linkman!=null and change.linkman!='' ">
+		   		 	AND crm_change.linkman like '%${change.linkman}%'
+		   		 </if> 
+		   </if>	
+	</sql>
+	
+	
+	 <!-- 商品查询列表 -->
+	<select id="findChangeList" parameterType="com.guigu.crm.model.ChangeQueryVo" 
+	  resultMap="BaseResultMap">
+
+		 SELECT crm_change.* FROM crm_change
+		  <where>
+		 	<include refid="query_change_where"></include>
+		 </where> 
+	</select>
+  
+  
+</mapper>

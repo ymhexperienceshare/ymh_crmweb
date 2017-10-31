@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guigu.crm.mapper.CrmSysMapperCustom" >
+	<resultMap id="LoginMap" type="com.guigu.crm.model.CrmUserCustom" >
+    <id column="id" property="userid" jdbcType="INTEGER" />
+    <result column="name" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="user_flag" property="userflag" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="role_flag" property="roleflag" jdbcType="INTEGER" />
+    <result column="parent_code" property="parentCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="RoleMap" type="com.guigu.crm.model.CrmRoleCustom" >
+    <id column="id" property="roleid" jdbcType="INTEGER" />
+    <result column="name" property="rolename" jdbcType="VARCHAR" />
+    <result column="desc" property="roledesc" jdbcType="VARCHAR" />
+    <result column="flag" property="roleflag" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="UserRoleMap" type="com.guigu.crm.model.CrmUserCustom" >
+    <id column="user_id" property="userid" jdbcType="INTEGER" />
+    <result column="user_name" property="username" jdbcType="VARCHAR" />
+    <result column="user_password" property="password" jdbcType="VARCHAR" />
+    <result column="user_role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="user_flag" property="userflag" jdbcType="INTEGER" />
+    <result column="role_id" property="roleid" jdbcType="INTEGER" />
+    <result column="role_name" property="rolename" jdbcType="VARCHAR" />
+    <result column="role_desc" property="roledesc" jdbcType="VARCHAR" />
+    <result column="role_flag" property="roleflag" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="RightRoleMap" type="com.guigu.crm.model.CrmRightCustom" >
+    <id column="code" property="code" jdbcType="VARCHAR" />
+    <result column="parent_code" property="parentCode" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="tip" property="tip" jdbcType="VARCHAR" />
+    <result column="id" property="roleid" jdbcType="INTEGER" />
+    <result column="name" property="rolename" jdbcType="VARCHAR" />
+    <result column="desc" property="roledesc" jdbcType="VARCHAR" />
+    <result column="flag" property="roleflag" jdbcType="INTEGER" />
+    <!-- <result column="id" property="id" jdbcType="INTEGER" /> -->
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="LoginNoteMap" type="com.guigu.crm.model.CrmLogin" >
+    <id column="login_id" property="loginId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+    <result column="login_date" property="loginDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+	
+	 <!-- 登录-->
+	 <select id="login" parameterType="com.guigu.crm.model.CrmUserCustom" 
+	  resultMap="LoginMap">
+		 SELECT user.id,user.name,user.password,user.flag user_flag,role.flag role_flag,ri.parent_code,role.id role_id
+         FROM crm_user user,crm_role role,crm_right ri,crm_role_right rr
+		 <where>
+		 	<include refid="login_where"></include>
+		 </where>
+	</select>
+	<!-- 定义查询的sql片段  查询条件 -->
+	<sql id="login_where">
+		   user.role_id=role.id and role.id=rr.role_id and ri.code=rr.role_code and
+		   user.name = #{username} and user.password = #{password}
+	</sql>
+	
+	<!-- 不考虑权限登录 -->
+	<select id="loginAll" parameterType="com.guigu.crm.model.CrmUserCustom" 
+	  resultMap="LoginMap">
+		 SELECT crm_user.* FROM crm_user
+		 <where>
+		 	<include refid="loginAll_where"></include>
+		 </where>
+	</select>
+	<sql id="loginAll_where">
+		   crm_user.name = #{username} and
+		   crm_user.password = #{password}
+	</sql>
+	
+	<!-- 查询用户和角色 -->
+	<select id="userRoleList" parameterType="com.guigu.crm.model.CrmUserRoleCustomVo" 
+	  resultMap="UserRoleMap">
+		 SELECT user.id user_id,user.name user_name,user.password user_password,user.role_id user_role_id,
+		 user.flag user_flag,role.name role_name,role.desc role_desc,role.flag role_flag 
+		 FROM crm_user user,crm_role role
+		 <where>
+		 	<include refid="userRoleList_where"></include>
+		 </where>
+	</select>
+	<sql id="userRoleList_where">
+			user.role_id=role.id  
+		    <if test="crmUserCustom!=null">
+		   		 <if test="crmUserCustom.username!=null and crmUserCustom.username!=''">
+		   		 	and user.name like '%${crmUserCustom.username}%'
+		   		 </if>
+		   		 <if test="crmUserCustom.userflag!=null">
+		   		 	and user.flag= #{crmUserCustom.userflag}
+		   		 </if>
+		   		 <if test="crmUserCustom.rolename != '--所有角色--'">
+		   		 	and role.name = #{crmUserCustom.rolename}
+		   		 </if>
+		   		 <if test="crmUserCustom.roleflag!=null">
+		   		 	and role.flag= #{crmUserCustom.roleflag}
+		   		 </if>
+		   </if>
+	</sql>
+	
+	<!-- 查询角色 -->
+	<select id="roleList" resultMap="RoleMap">
+		 SELECT crm_role.* FROM crm_role 
+	</select>
+	
+	<!-- 禁用用户 -->
+	<update id="disableUser" parameterType="com.guigu.crm.model.CrmUserCustom" >
+		<if test="userflag==1">
+			UPDATE crm_user set flag="0" WHERE id= #{userid}
+		</if>
+		<if test="userflag==0">
+			UPDATE crm_user set flag="1" WHERE id= #{userid}
+		</if>
+	</update>
+	
+	<!-- 添加用户 -->
+	<insert id="addUser" parameterType="com.guigu.crm.model.CrmUserCustom" >
+		INSERT INTO crm_user (name,password,role_id,flag) values(#{username},#{password},#{roleId},#{userflag})
+	</insert>
+	
+	<!-- 修改用户 -->
+	<update id="updateUser" parameterType="com.guigu.crm.model.CrmUserCustom">
+		UPDATE crm_user set password=#{password}
+		<if test="username!=null">
+			,name=#{username}
+		</if>
+		<if test="roleId!=null">
+			,role_id=#{roleId}
+		</if>
+		<if test="userflag!=null">
+			,flag=#{userflag}
+		</if>
+		WHERE id=#{userid}
+	</update>
+	
+	<!-- 查询权限和角色 -->
+	<select id="rightRoleList" resultMap="RightRoleMap">
+		 SELECT ri.code,ri.type,role.name rolename,role.flag roleflag,ri.text,role.id roleid,r.role_id roleId
+		 FROM crm_role role, crm_right ri,crm_role_right r
+		 WHERE role.id=r.role_id and ri.code=r.role_code
+	</select>
+	
+	<!-- 禁用角色 -->
+	<update id="disableRole" parameterType="com.guigu.crm.model.CrmRightCustom" >
+		<if test="roleflag==1">
+			UPDATE crm_role set flag="0" WHERE id= #{roleid}
+		</if>
+		<if test="roleflag==0">
+			UPDATE crm_role set flag="1" WHERE id= #{roleid}
+		</if>
+	</update>
+	
+	<!-- 查询上次登录信息 -->
+	<select id="findLogin" parameterType="com.guigu.crm.model.CrmLogin" resultMap="LoginNoteMap">
+		SELECT login_id,user_id,login_ip,MAX(login_date) login_date
+		FROM crm_login
+		WHERE user_id= #{userId} and login_date=(SELECT MAX(login_date)
+		FROM crm_login
+		WHERE user_id= #{userId}  )
+	</select>
+	
+	<!-- 根据id查询用户和角色状态 -->
+	<select id="findflag" parameterType="com.guigu.crm.model.CrmUserCustom" resultMap="UserRoleMap">
+		 SELECT user.id user_id,user.flag user_flag,role.flag role_flag 
+		 FROM crm_user user,crm_role role
+		 WHERE user.role_id=role.id  and user.id=#{userid} 
+	</select>
+	
+	<!-- 根据角色状态，查询该状态所有用户 -->
+	<select id="findAllUserByRoleFlag" parameterType="com.guigu.crm.model.CrmUserCustom" resultMap="UserRoleMap">
+		SELECT user.id user_id
+        FROM crm_user user, crm_role role
+        WHERE user.role_id=role.id and role.flag=#{roleflag}
+	</select>
+	
+</mapper>

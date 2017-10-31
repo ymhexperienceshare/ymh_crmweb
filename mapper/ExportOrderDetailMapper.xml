@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guigu.crm.mapper.ExportOrderDetailMapper" >
+
+<!-- 映射结果集 -->
+  <resultMap id="myResultMap" type="com.guigu.crm.model.CustomerOrderOrderDetail" >
+    <id column="cust_no" property="customerNo" jdbcType="VARCHAR" />
+    <result column="cust_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="cust_level" property="customerLevel" jdbcType="INTEGER" />
+    <result column="or_id" property="orderId" jdbcType="INTEGER" />
+    <result column="or_date" property="orderDate" jdbcType="DATE" />
+    <result column="or_addr" property="orderAddr" jdbcType="VARCHAR" />
+    <result column="od_count" property="detailCount" jdbcType="INTEGER" />
+    <result column="od_price" property="detailPrice" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <!-- ============================================== -->
+    <select id="queryOrderDetailOfCustomer" resultMap="myResultMap">
+    select c.`no` cust_no,c.`name` cust_name,c.`level` cust_level,o.id or_id,o.date or_date,o.addr or_addr,od.count od_count,od.price od_price
+	from crm_customer c,crm_orders o,crm_orders_line od
+	where c.`no`=o.custtomer and od.order_id=o.id
+    </select>
+  
+
+</mapper>
+
+
